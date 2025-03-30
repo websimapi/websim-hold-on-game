@@ -1,5 +1,5 @@
 import { Fragment, jsxDEV } from "react/jsx-dev-runtime";
-import React, { useState, useEffect, useCallback, useSyncExternalStore } from "react";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
 import { createRoot } from "react-dom/client";
 const room = new WebsimSocket();
 const LEADERBOARD_COLLECTION = "hold_game_scores_v1";
