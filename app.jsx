@@ -1,6 +1,6 @@
 import { Fragment, jsxDEV } from "react/jsx-dev-runtime";
-import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
-import { createRoot } from "react-dom/client";
+const { useState, useEffect, useCallback, useSyncExternalStore } = React;
+const { createRoot } = ReactDOM;
 const room = new WebsimSocket();
 const LEADERBOARD_COLLECTION = "hold_game_scores_v1";
 function formatTime(milliseconds) {
@@ -28,13 +28,13 @@ function Avatar({ peer, presence }) {
     false,
     {
       fileName: "<stdin>",
-      lineNumber: 28,
+      lineNumber: 29,
       columnNumber: 13
     },
     this
   ) }, void 0, false, {
     fileName: "<stdin>",
-    lineNumber: 27,
+    lineNumber: 28,
     columnNumber: 9
   }, this);
 }
@@ -47,32 +47,32 @@ function Leaderboard() {
   return /* @__PURE__ */ jsxDEV("div", { className: "leaderboard", children: [
     /* @__PURE__ */ jsxDEV("h2", { children: "Top 10 Scores" }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 51,
+      lineNumber: 52,
       columnNumber: 13
     }, this),
     /* @__PURE__ */ jsxDEV("ol", { children: topScores.map((entry) => /* @__PURE__ */ jsxDEV("li", { children: [
       /* @__PURE__ */ jsxDEV("span", { className: "username", children: entry.username }, void 0, false, {
         fileName: "<stdin>",
-        lineNumber: 55,
+        lineNumber: 56,
         columnNumber: 25
       }, this),
       /* @__PURE__ */ jsxDEV("span", { className: "score", children: formatTime(entry.score) }, void 0, false, {
         fileName: "<stdin>",
-        lineNumber: 56,
+        lineNumber: 57,
         columnNumber: 25
       }, this)
     ] }, entry.id, true, {
       fileName: "<stdin>",
-      lineNumber: 54,
+      lineNumber: 55,
       columnNumber: 21
     }, this)) }, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 52,
+      lineNumber: 53,
       columnNumber: 13
     }, this)
   ] }, void 0, true, {
     fileName: "<stdin>",
-    lineNumber: 50,
+    lineNumber: 51,
     columnNumber: 9
   }, this);
 }
@@ -138,9 +138,12 @@ function App() {
   }, [isHolding, gameOver]);
   const getEventPosition = (e) => {
     let x, y;
-    if (e.touches) {
+    if (e.touches && e.touches.length > 0) {
       x = e.touches[0].clientX;
       y = e.touches[0].clientY;
+    } else if (e.changedTouches && e.changedTouches.length > 0) {
+      x = e.changedTouches[0].clientX;
+      y = e.changedTouches[0].clientY;
     } else {
       x = e.clientX;
       y = e.clientY;
@@ -155,8 +158,8 @@ function App() {
     setIsHolding(false);
     room.updatePresence({ active: false, position: null });
   };
-  const ownPresence = presence[room.clientId];
-  const ownPeer = peers[room.clientId];
+  const ownPresence = room.clientId ? presence[room.clientId] : null;
+  const ownPeer = room.clientId ? peers[room.clientId] : null;
   return /* @__PURE__ */ jsxDEV(Fragment, { children: [
     /* @__PURE__ */ jsxDEV(
       "div",
@@ -171,37 +174,37 @@ function App() {
         onTouchCancel: handleInteractionEnd,
         onTouchMove: handleInteractionMove,
         children: [
-          Object.entries(presence).map(([clientId, clientPresence]) => {
-            const peer = peers[clientId];
-            if (!peer) return null;
+          Object.entries(peers).map(([clientId, peer]) => {
+            const clientPresence = presence[clientId];
+            if (!peer || !clientPresence) return null;
             return /* @__PURE__ */ jsxDEV(Avatar, { peer, presence: clientPresence }, clientId, false, {
               fileName: "<stdin>",
-              lineNumber: 185,
+              lineNumber: 192,
               columnNumber: 29
             }, this);
           }),
           isHolding && ownPresence && ownPresence.position && /* @__PURE__ */ jsxDEV("div", { className: "timer", style: { top: `${ownPresence.position.y + 30}px`, left: `${ownPresence.position.x}px` }, children: formatTime(elapsedTime) }, void 0, false, {
             fileName: "<stdin>",
-            lineNumber: 189,
+            lineNumber: 196,
             columnNumber: 22
           }, this),
           gameOver && /* @__PURE__ */ jsxDEV("div", { className: "game-over-message", children: [
             "Game Over! ",
             /* @__PURE__ */ jsxDEV("br", {}, void 0, false, {
               fileName: "<stdin>",
-              lineNumber: 196,
+              lineNumber: 203,
               columnNumber: 36
             }, this),
             "Your Score: ",
             formatTime(finalScore),
             /* @__PURE__ */ jsxDEV("button", { onClick: restartGame, style: { marginTop: "10px", padding: "10px 20px", fontSize: "1em" }, children: "Play Again" }, void 0, false, {
               fileName: "<stdin>",
-              lineNumber: 198,
+              lineNumber: 205,
               columnNumber: 25
             }, this)
           ] }, void 0, true, {
             fileName: "<stdin>",
-            lineNumber: 195,
+            lineNumber: 202,
             columnNumber: 21
           }, this)
         ]
@@ -210,19 +213,19 @@ function App() {
       true,
       {
         fileName: "<stdin>",
-        lineNumber: 170,
+        lineNumber: 177,
         columnNumber: 13
       },
       this
     ),
     !gameOver && /* @__PURE__ */ jsxDEV(Leaderboard, {}, void 0, false, {
       fileName: "<stdin>",
-      lineNumber: 202,
+      lineNumber: 209,
       columnNumber: 27
     }, this)
   ] }, void 0, true, {
     fileName: "<stdin>",
-    lineNumber: 169,
+    lineNumber: 176,
     columnNumber: 9
   }, this);
 }
@@ -230,6 +233,6 @@ const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(/* @__PURE__ */ jsxDEV(App, {}, void 0, false, {
   fileName: "<stdin>",
-  lineNumber: 209,
+  lineNumber: 216,
   columnNumber: 13
 }));
